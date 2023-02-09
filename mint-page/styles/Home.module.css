@@ -41,7 +41,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(25%, auto));
+  grid-template-columns: repeat(3, minmax(25%, auto));
   width: var(--max-width);
   max-width: 100%;
 }
@@ -62,6 +62,23 @@
 .card h2 {
   font-weight: 600;
   margin-bottom: 0.7rem;
+}
+
+.zone {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(25%, auto));
+  width: var(--max-width);
+  border: 1px solid rgba(0, 0);
+  position: sticky;
+  max-width: 25%;
+}
+
+.card button {
+  padding: 2rem 2rem;
+  border-radius: var(--border-radius);
+  background: rgba(var(--card-rgb), 0);
+  border: 1px solid rgba(var(--card-border-rgb), 0);
+  transition: background 200ms, border 200ms;
 }
 
 .card p {
