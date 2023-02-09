@@ -7,6 +7,10 @@ import axios from 'axios'
 import { useState } from 'react'
 const inter = Inter({ subsets: ['latin'] })
 
+const linkedin = 'https://cdn-icons-png.flaticon.com/512/3128/3128219.png'
+const github = 'https://cdn-icons-png.flaticon.com/512/4926/4926624.png'
+const twitter = 'https://cdn-icons-png.flaticon.com/512/3128/3128212.png'
+
 export default function Home() {
   const [count, setCount] = useState(1)
   const [price, setPrice] = useState(0)
@@ -39,7 +43,12 @@ export default function Home() {
 
   async function mint(e) {
     e.preventDefault()
-    await init(e)
+    //await init(e)
+    provider = new ethers.BrowserProvider(window.ethereum)
+    await provider.send("eth_requestAccounts", [])
+    signer = await provider.getSigner()
+    nft = new ethers.Contract(contractAddress, abi, provider)
+
     const value = count * price
     await nft.connect(signer).mint(count, [], {value: value.toString()})
   }
@@ -62,17 +71,29 @@ export default function Home() {
     return
   }
 
+  async function disconnect(e) {
+    e.preventDefault()
+
+    setUserAddress('')
+    setMessage('Connect Wallet')
+  }
+
   return (
     <>
       <Head>
-        <title>GaslesslyNFT</title>
+        <title>Minty</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
-            <code className={styles.code}>{message == 'Connect Wallet' ? 'Gaslessly NFT' : `Connected: ${userAddress}`}</code>
+            <button style={{border: 'none', background: 'none'}} onClick={e => disconnect(e)}><code className={styles.code}>{message == 'Connect Wallet' ? 'Mint NFT' : `Connected: ${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`}</code></button>
+          </p>
+          <p className={styles.zone}>
+          <a href='https://twitter.com/0xlawson' target='blank' style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={twitter}></img></a>
+          <a href='https://linkedin.com/in/adrian-lawson' target='blank' style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={linkedin}></img></a>
+          <a href='https://github.com/aglawson' target='blank' style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={github}></img></a>
           </p>
         </div>
 
@@ -81,10 +102,10 @@ export default function Home() {
               Minting {count} for {price !== 0 ? ((count * price) / 10**18).toFixed(2) : '?'} ETH
             </h2>
           </div>
-          <img style={{borderRadius: '15%', marginTop: '-15%'}} className={styles.card} src={metadata} width={250} height={250}></img>
+          <img style={{borderRadius: '15%', marginTop: '-15%'}} className={styles.card} src={metadata} width={300} height={300}></img>
           <div className={styles.zone}>
             <p><button onClick={(e) => handleClick(e)} className={styles.card}><code className={styles.code}>{message == 'Connect Wallet' ? 'Connect Wallet' : `Mint`}</code></button></p>
-            <button className={styles.card} width={10} height={10} onClick={() => count > 1 ? setCount(count - 1) : setCount(count)}><img src='https://cdn-icons-png.flaticon.com/512/43/43625.png' alt='-' width={25} height={25}></img></button>
+            <button className={styles.card} width={1} height={1} onClick={() => count > 1 ? setCount(count - 1) : setCount(count)}><img src='https://cdn-icons-png.flaticon.com/512/43/43625.png' alt='-' width={25} height={25}></img></button>
             <button className={styles.card} onClick={() => count < 10 ? setCount(count + 1) : setCount(count)}><img width={25} height={25} alt='^' src='https://cdn-icons-png.flaticon.com/512/748/748113.png'></img></button> 
           </div>
         <div className={styles.grid} style={{marginBottom: '-6%'}}>
@@ -109,7 +130,7 @@ export default function Home() {
             Community <span>-&gt;</span>
           </h2>
           <p className={inter.className}>
-            By devs, for devs. Let's learn from each other.
+            By devs, for devs. Let's learn from each other!
           </p>
           </div>
           {/* <div className={styles.card}>
