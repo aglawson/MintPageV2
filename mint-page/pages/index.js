@@ -84,8 +84,8 @@ export default function Home() {
           <img style={{borderRadius: '15%', marginTop: '-15%'}} className={styles.card} src={metadata} width={250} height={250}></img>
           <div className={styles.zone}>
             <p><button onClick={(e) => handleClick(e)} className={styles.card}><code className={styles.code}>{message == 'Connect Wallet' ? 'Connect Wallet' : `Mint`}</code></button></p>
-            <button className={styles.card} onClick={() => count < 10 ? setCount(count + 1) : setCount(count)}><img width={25} height={25} alt='^' src='https://cdn-icons-png.flaticon.com/512/748/748113.png'></img></button> 
             <button className={styles.card} width={10} height={10} onClick={() => count > 1 ? setCount(count - 1) : setCount(count)}><img src='https://cdn-icons-png.flaticon.com/512/43/43625.png' alt='-' width={25} height={25}></img></button>
+            <button className={styles.card} onClick={() => count < 10 ? setCount(count + 1) : setCount(count)}><img width={25} height={25} alt='^' src='https://cdn-icons-png.flaticon.com/512/748/748113.png'></img></button> 
           </div>
         <div className={styles.grid} style={{marginBottom: '-6%'}}>
           <div className={styles.card}>
