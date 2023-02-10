@@ -29,6 +29,8 @@ export default function Home() {
   const [display, setDisplay] = useState('none')
   const [tx, setTx] = useState('')
   const [modalMessage, setModalMessage] = useState('')
+  const [topLeft, setTopLeft] = useState('Mint NFT')
+
   let provider, signer, nft
  
   // Hook
@@ -69,13 +71,15 @@ export default function Home() {
 
     const chain = await provider.getNetwork()
     await enforceNetwork(chain.chainId)
-
-    setUserAddress(await signer.getAddress())
+    const user = await signer.getAddress()
+    setUserAddress(user)
     setMessage('Connected')
 
     nft = new ethers.Contract(config.contractAddress, abi, provider)
     const p = await nft.price()
     setPrice(parseInt(p))
+
+    setTopLeft(`Connected: ${user.substring(0, 6)}...${user.substring(user.length - 4)}`)
   }
 
   async function enforceNetwork(current) {
@@ -138,6 +142,19 @@ export default function Home() {
     setMessage('Connect Wallet')
   }
 
+  function handleMouseEnter(e) {
+    e.preventDefault()
+
+    if(userAddress !== '') setTopLeft(`Disconnect Wallet?`)
+  }
+
+  function handleMouseLeave(e) {
+    e.preventDefault()
+
+    if(topLeft === 'Disconnect Wallet?') setTopLeft(`Connected: ${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`)
+    if(userAddress == '') setTopLeft(`Mint NFT`)
+  }
+
   return (
     <>
       <Head>
@@ -147,8 +164,8 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <div className={styles.description}>
-          <p>
-            <button style={{border: 'none', background: 'none'}} onClick={e => disconnect(e)}><code className={styles.code}>{message == 'Connect Wallet' ? 'Mint NFT' : `Connected: ${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`}</code></button>
+          <p onMouseEnter={(e) => handleMouseEnter(e)} onMouseLeave={e => handleMouseLeave(e)}>
+            <button style={{border: 'none', background: 'none'}} onClick={e => disconnect(e)}><code className={styles.code}>{topLeft}</code></button>
           </p>
           <p className={useWindowSize() >= 800 ? styles.zone : styles.zoneMobile}>
           <a href='https://twitter.com/0xlawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={config.twitter}></img></a>
@@ -193,7 +210,6 @@ export default function Home() {
             By devs, for devs. Lets learn from each other!
           </p>
           </a>
-
           <div onClick={() => setDisplay('none')} className={styles.modal} style={{display: display}}></div>
           <div className={styles.modalMain} style={{display: display}}>
                <p className={styles.code} style={{textAlign: 'center', paddingTop: '5%'}}>{modalMessage}</p>
