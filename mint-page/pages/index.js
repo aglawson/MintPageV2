@@ -22,7 +22,6 @@ export default function Home() {
   const [display, setDisplay] = useState('none')
   const [tx, setTx] = useState('')
   const [modalMessage, setModalMessage] = useState('')
-  const [windowWidth, setWindowWidth] = useState(-1)
  
   // Hook
   function useWindowSize() {
