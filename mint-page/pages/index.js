@@ -15,7 +15,10 @@ const config = {
   twitter: 'https://cdn-icons-png.flaticon.com/512/3128/3128212.png',
   etherscan: 'https://goerli.etherscan.io/',
   network: 5,
-  contractAddress: '0xAE9EF6F43272C1F5c12cB7530B2868D4055FCbF6'
+  contractAddress: '0xAE9EF6F43272C1F5c12cB7530B2868D4055FCbF6',
+  githubUtility: 'https://github.com/aglawson/MintPageV2/tree/main/mint-page#utility',
+  githubGovernance: 'https://github.com/aglawson/MintPageV2/tree/main/mint-page#governance',
+  githubCommunity: 'https://github.com/aglawson/MintPageV2/tree/main/mint-page#community'
 }
 
 export default function Home() {
@@ -99,7 +102,7 @@ export default function Home() {
 
     const value = count * price
     const mint = await nft.connect(signer).mint(count, [], {value: value.toString()})
-    
+
     setTx(mint.hash)
     setModalMessage('Transaction Sent')
     setDisplay('block')
@@ -166,30 +169,30 @@ export default function Home() {
             <button className={styles.card} onClick={() => count < 10 ? setCount(count + 1) : setCount(count)}><img width={25} height={25} alt='^' src='https://cdn-icons-png.flaticon.com/512/748/748113.png'></img></button> 
           </div>
         <div className={styles.grid} style={{marginBottom: '-6%'}}>
-          <div className={styles.card}>
+          <a href={config.githubUtility} target='blank' rel="noreferrer" className={styles.card}>
           <h2 className={inter.className}>
             Utility <span>-&gt;</span>
           </h2>
           <p className={inter.className}>
             Get lifetime access to all Developer Tools and APIs we build.
           </p>
-          </div>
-          <div className={styles.card}>
+          </a>
+          <a href={config.githubGovernance} target='blank' rel="noreferrer" className={styles.card}>
           <h2 className={inter.className}>
             Governance <span>-&gt;</span>
           </h2>
           <p className={inter.className}>
             Decide what gets built next in our ecosystem of dev tools.
           </p>
-          </div>
-          <div className={styles.card}>
+          </a>
+          <a href={config.githubCommunity} target='blank' rel="noreferrer" className={styles.card}>
           <h2 className={inter.className}>
             Community <span>-&gt;</span>
           </h2>
           <p className={inter.className}>
             By devs, for devs. Lets learn from each other!
           </p>
-          </div>
+          </a>
 
           <div onClick={() => setDisplay('none')} className={styles.modal} style={{display: display}}></div>
           <div className={styles.modalMain} style={{display: display}}>
