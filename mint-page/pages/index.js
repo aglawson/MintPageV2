@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
-import { Contract, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import { metadata, abi } from '../utils/utils'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
@@ -77,7 +77,7 @@ export default function Home() {
 
   async function enforceNetwork(current) {
     if(parseInt(current) != config.network) {
-      await window.ethereum.request({ //https://rpc.ankr.com/eth_goerli
+      await window.ethereum.request({
         method: "wallet_switchEthereumChain",
         params: [{
             chainId: "0x5"
@@ -88,7 +88,7 @@ export default function Home() {
 
   async function mint(e) {
     e.preventDefault()
-    //await init(e)
+
     provider = new ethers.BrowserProvider(window.ethereum)
     await provider.send("eth_requestAccounts", [])
     const chain = provider.getNetwork()
@@ -99,6 +99,7 @@ export default function Home() {
 
     const value = count * price
     const mint = await nft.connect(signer).mint(count, [], {value: value.toString()})
+    
     setTx(mint.hash)
     setModalMessage('Transaction Sent')
     setDisplay('block')
