@@ -131,9 +131,9 @@ export default function Home() {
             <button style={{border: 'none', background: 'none'}} onClick={e => disconnect(e)}><code className={styles.code}>{message == 'Connect Wallet' ? 'Mint NFT' : `Connected: ${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`}</code></button>
           </p>
           <p className={useWindowSize() >= 800 ? styles.zone : styles.zoneMobile}>
-          <a href='https://twitter.com/0xlawson' target='blank' style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={twitter}></img></a>
-          <a href='https://linkedin.com/in/adrian-lawson' target='blank' style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={linkedin}></img></a>
-          <a href='https://github.com/aglawson' target='blank' style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={github}></img></a>
+          <a href='https://twitter.com/0xlawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={twitter}></img></a>
+          <a href='https://linkedin.com/in/adrian-lawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={linkedin}></img></a>
+          <a href='https://github.com/aglawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={github}></img></a>
           </p>
         </div>
 
@@ -170,14 +170,14 @@ export default function Home() {
             Community <span>-&gt;</span>
           </h2>
           <p className={inter.className}>
-            By devs, for devs. Let's learn from each other!
+            By devs, for devs. Lets learn from each other!
           </p>
           </div>
 
           <div onClick={() => setDisplay('none')} className={styles.modal} style={{display: display}}></div>
           <div className={styles.modalMain} style={{display: display}}>
                <p className={styles.code} style={{textAlign: 'center', paddingTop: '5%'}}>{modalMessage}</p>
-               <p className={styles.code} style={{textAlign: 'center', marginTop: '15%'}}><a href={modalMessage == 'Transaction Sent' ? `${etherscan}tx/${tx}` : ''} target={modalMessage == 'Transaction Sent' ? '_blank' : '_self'} className={modalMessage == 'Transaction Sent' ? styles.card : styles.code} style={{}}>{modalMessage == 'Transaction Sent' ? 'View on Etherscan' : 'Please try again'}</a></p>
+               <p className={styles.code} style={{textAlign: 'center', marginTop: '15%'}}><a href={modalMessage == 'Transaction Sent' ? `${etherscan}tx/${tx}` : ''} target={modalMessage == 'Transaction Sent' ? '_blank' : '_self'} rel="noreferrer" className={modalMessage == 'Transaction Sent' ? styles.card : styles.code} style={{}}>{modalMessage == 'Transaction Sent' ? 'View on Etherscan' : 'Please try again'}</a></p>
           </div>
         </div>
       </main>
