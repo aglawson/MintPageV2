@@ -164,8 +164,8 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <div className={styles.description}>
-          <p onMouseEnter={(e) => handleMouseEnter(e)} onMouseLeave={e => handleMouseLeave(e)}>
-            <button style={{border: 'none', background: 'none'}} onClick={e => disconnect(e)}><code className={styles.code}>{topLeft}</code></button>
+          <p onMouseEnter={(e) => handleMouseEnter(e)} onMouseLeave={e => handleMouseLeave(e)} onClick={e => disconnect(e)}>
+            <code className={styles.code}>{topLeft}</code>
           </p>
           <p className={useWindowSize() >= 800 ? styles.zone : styles.zoneMobile}>
           <a href='https://twitter.com/0xlawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={config.twitter}></img></a>
