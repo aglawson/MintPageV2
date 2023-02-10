@@ -26,43 +26,31 @@ export default function Home() {
  
   // Hook
   function useWindowSize() {
-    // Initialize state with undefined width/height so server and client renders match
-    // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-    const [windowSize, setWindowSize] = useState({
-      width: undefined,
-      height: undefined,
-    });
-    setWindowWidth(window.innerWidth)
-
+    const [result, setResult] = useState(undefined)
 
     useEffect(() => {
       // only execute all the code below in client side
       // Handler to call on window resize
-      function handleResize() {
-        // Set window width/height to state
-        setWindowSize({
-          width: window.innerWidth,
-          height: window.innerHeight,
-        });
-        setWindowWidth(window.innerWidth)
+      function handleLoad() {
+        setResult(window.innerWidth)
       }
       
       // Add event listener
-      window.addEventListener("load", handleResize);
+      window.addEventListener("load", handleLoad);
       
       // Call handler right away so state gets updated with initial window size
-      handleResize();
+      handleLoad();
       
       // Remove event listener on cleanup
-      return () => window.removeEventListener("resize", handleResize);
+      return () => window.removeEventListener("load", handleLoad);
     }, []); // Empty array ensures that effect is only run on mount
-    return windowSize;
+    console.log(result);
+    return result;
   }
 
-  if(typeof window !== 'undefined' && windowWidth === -1) {
-    setWindowWidth(window.innerWidth)
-    useWindowSize()
-  }
+  // if(typeof window !== 'undefined') {
+  //   useWindowSize()
+  // }
 
   const contractAddress = '0xAE9EF6F43272C1F5c12cB7530B2868D4055FCbF6'
   
@@ -142,7 +130,7 @@ export default function Home() {
           <p>
             <button style={{border: 'none', background: 'none'}} onClick={e => disconnect(e)}><code className={styles.code}>{message == 'Connect Wallet' ? 'Mint NFT' : `Connected: ${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`}</code></button>
           </p>
-          <p className={styles.zone}>
+          <p className={useWindowSize() >= 800 ? styles.zone : styles.zoneMobile}>
           <a href='https://twitter.com/0xlawson' target='blank' style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={twitter}></img></a>
           <a href='https://linkedin.com/in/adrian-lawson' target='blank' style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={linkedin}></img></a>
           <a href='https://github.com/aglawson' target='blank' style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={github}></img></a>
@@ -155,7 +143,7 @@ export default function Home() {
             </h2>
           </div>
           <img style={{borderRadius: '15%', marginTop: '-15%'}} className={styles.card} src={metadata} width={300} height={300}></img>
-          <div className={windowWidth >= 800 ? styles.zone : styles.zoneMobile}>
+          <div className={useWindowSize() >= 800 ? styles.zone : styles.zoneMobile}>
             <p><button onClick={(e) => handleClick(e)} className={styles.card}><code className={styles.code}>{message == 'Connect Wallet' ? 'Connect Wallet' : `Mint`}</code></button></p>
             <button className={styles.card} width={1} height={1} onClick={() => count > 1 ? setCount(count - 1) : setCount(count)}><img src='https://cdn-icons-png.flaticon.com/512/43/43625.png' alt='-' width={25} height={25}></img></button>
             <button className={styles.card} onClick={() => count < 10 ? setCount(count + 1) : setCount(count)}><img width={25} height={25} alt='^' src='https://cdn-icons-png.flaticon.com/512/748/748113.png'></img></button> 
