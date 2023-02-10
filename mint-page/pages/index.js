@@ -9,11 +9,14 @@ import React from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const linkedin = 'https://cdn-icons-png.flaticon.com/512/3128/3128219.png'
-const github = 'https://cdn-icons-png.flaticon.com/512/4926/4926624.png'
-const twitter = 'https://cdn-icons-png.flaticon.com/512/3128/3128212.png'
-const etherscan = 'https://goerli.etherscan.io/'
-const network = 5
+const config = {
+  linkedin: 'https://cdn-icons-png.flaticon.com/512/3128/3128219.png',
+  github: 'https://cdn-icons-png.flaticon.com/512/4926/4926624.png',
+  twitter: 'https://cdn-icons-png.flaticon.com/512/3128/3128212.png',
+  etherscan: 'https://goerli.etherscan.io/',
+  network: 5,
+  contractAddress: '0xAE9EF6F43272C1F5c12cB7530B2868D4055FCbF6'
+}
 
 export default function Home() {
   const [count, setCount] = useState(1)
@@ -23,6 +26,7 @@ export default function Home() {
   const [display, setDisplay] = useState('none')
   const [tx, setTx] = useState('')
   const [modalMessage, setModalMessage] = useState('')
+  let provider, signer, nft
  
   // Hook
   function useWindowSize() {
@@ -44,16 +48,9 @@ export default function Home() {
       // Remove event listener on cleanup
       return () => window.removeEventListener("load", handleLoad);
     }, []); // Empty array ensures that effect is only run on mount
+
     return result;
   }
-
-  // if(typeof window !== 'undefined') {
-  //   useWindowSize()
-  // }
-
-  const contractAddress = '0xAE9EF6F43272C1F5c12cB7530B2868D4055FCbF6'
-  
-  let provider, signer, nft
 
   async function init(e) {
     if(e) {
@@ -66,30 +63,27 @@ export default function Home() {
     provider = new ethers.BrowserProvider(window.ethereum)
     await provider.send("eth_requestAccounts", [])
     signer = await provider.getSigner()
+
     const chain = await provider.getNetwork()
-    if(parseInt(chain.chainId) != 5) {
-      await window.ethereum.request({ //https://rpc.ankr.com/eth_goerli
-        method: "wallet_switchEthereumChain",
-        params: [{
-            chainId: "0x5"//,
-            // rpcUrls: ['https://rpc.ankr.com/eth_goerli'],
-            // chainName: "Goerli Testnet",
-            // nativeCurrency: {
-            //     name: "Goerli Ethereum",
-            //     symbol: "ETH",
-            //     decimals: 18
-            // },
-            // blockExplorerUrls: ["https://goerli.etherscan.io"]
-        }]
-      });
-      //init(e)
-    }
+    await enforceNetwork(chain.chainId)
+
     setUserAddress(await signer.getAddress())
     setMessage('Connected')
 
-    nft = new ethers.Contract(contractAddress, abi, provider)
+    nft = new ethers.Contract(config.contractAddress, abi, provider)
     const p = await nft.price()
     setPrice(parseInt(p))
+  }
+
+  async function enforceNetwork(current) {
+    if(parseInt(current) != config.network) {
+      await window.ethereum.request({ //https://rpc.ankr.com/eth_goerli
+        method: "wallet_switchEthereumChain",
+        params: [{
+            chainId: "0x5"
+        }]
+      });
+    }
   }
 
   async function mint(e) {
@@ -97,8 +91,11 @@ export default function Home() {
     //await init(e)
     provider = new ethers.BrowserProvider(window.ethereum)
     await provider.send("eth_requestAccounts", [])
+    const chain = provider.getNetwork()
+    await enforceNetwork(chain.chainId)
+
     signer = await provider.getSigner()
-    nft = new ethers.Contract(contractAddress, abi, provider)
+    nft = new ethers.Contract(config.contractAddress, abi, provider)
 
     const value = count * price
     const mint = await nft.connect(signer).mint(count, [], {value: value.toString()})
@@ -150,9 +147,9 @@ export default function Home() {
             <button style={{border: 'none', background: 'none'}} onClick={e => disconnect(e)}><code className={styles.code}>{message == 'Connect Wallet' ? 'Mint NFT' : `Connected: ${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`}</code></button>
           </p>
           <p className={useWindowSize() >= 800 ? styles.zone : styles.zoneMobile}>
-          <a href='https://twitter.com/0xlawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={twitter}></img></a>
-          <a href='https://linkedin.com/in/adrian-lawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={linkedin}></img></a>
-          <a href='https://github.com/aglawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={github}></img></a>
+          <a href='https://twitter.com/0xlawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={config.twitter}></img></a>
+          <a href='https://linkedin.com/in/adrian-lawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={config.linkedin}></img></a>
+          <a href='https://github.com/aglawson' target='blank' rel="noreferrer" style={{border: 'none', background: 'none'}}><img height={25} width={25} style={{background: 'none', border: 'none'}} src={config.github}></img></a>
           </p>
         </div>
 
@@ -196,7 +193,7 @@ export default function Home() {
           <div onClick={() => setDisplay('none')} className={styles.modal} style={{display: display}}></div>
           <div className={styles.modalMain} style={{display: display}}>
                <p className={styles.code} style={{textAlign: 'center', paddingTop: '5%'}}>{modalMessage}</p>
-               <p className={styles.code} style={{textAlign: 'center', marginTop: '15%'}}><a href={modalMessage == 'Transaction Sent' ? `${etherscan}tx/${tx}` : ''} target={modalMessage == 'Transaction Sent' ? '_blank' : '_self'} rel="noreferrer" className={modalMessage == 'Transaction Sent' ? styles.card : styles.code} style={{}}>{modalMessage == 'Transaction Sent' ? 'View on Etherscan' : 'Please try again'}</a></p>
+               <p className={styles.code} style={{textAlign: 'center', marginTop: '15%'}}><a href={modalMessage == 'Transaction Sent' ? `${config.etherscan}tx/${tx}` : ''} target={modalMessage == 'Transaction Sent' ? '_blank' : '_self'} rel="noreferrer" className={modalMessage == 'Transaction Sent' ? styles.card : styles.code} style={{}}>{modalMessage == 'Transaction Sent' ? 'View on Etherscan' : 'Please try again'}</a></p>
           </div>
         </div>
       </main>

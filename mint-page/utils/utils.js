@@ -1,4 +1,4 @@
-export const metadata = 'https://ipfs.moralis.io:2053/ipfs/QmZghMbbDprSrXvWbnyAmDfs23jDV6zFHS5yQiC2nMZanc'
+export const metadata = 'https://storage.googleapis.com/kapsule-7f87f.appspot.com/StickmenToys/IMAGES/457.png'
 
 export const abi = [
     {
