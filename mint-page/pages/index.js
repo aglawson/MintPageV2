@@ -13,6 +13,7 @@ const linkedin = 'https://cdn-icons-png.flaticon.com/512/3128/3128219.png'
 const github = 'https://cdn-icons-png.flaticon.com/512/4926/4926624.png'
 const twitter = 'https://cdn-icons-png.flaticon.com/512/3128/3128212.png'
 const etherscan = 'https://goerli.etherscan.io/'
+const network = 5
 
 export default function Home() {
   const [count, setCount] = useState(1)
@@ -43,7 +44,6 @@ export default function Home() {
       // Remove event listener on cleanup
       return () => window.removeEventListener("load", handleLoad);
     }, []); // Empty array ensures that effect is only run on mount
-    console.log(result);
     return result;
   }
 
@@ -66,13 +66,30 @@ export default function Home() {
     provider = new ethers.BrowserProvider(window.ethereum)
     await provider.send("eth_requestAccounts", [])
     signer = await provider.getSigner()
+    const chain = await provider.getNetwork()
+    if(parseInt(chain.chainId) != 5) {
+      await window.ethereum.request({ //https://rpc.ankr.com/eth_goerli
+        method: "wallet_switchEthereumChain",
+        params: [{
+            chainId: "0x5"//,
+            // rpcUrls: ['https://rpc.ankr.com/eth_goerli'],
+            // chainName: "Goerli Testnet",
+            // nativeCurrency: {
+            //     name: "Goerli Ethereum",
+            //     symbol: "ETH",
+            //     decimals: 18
+            // },
+            // blockExplorerUrls: ["https://goerli.etherscan.io"]
+        }]
+      });
+      //init(e)
+    }
     setUserAddress(await signer.getAddress())
     setMessage('Connected')
 
     nft = new ethers.Contract(contractAddress, abi, provider)
     const p = await nft.price()
     setPrice(parseInt(p))
-    console.log(parseInt(p))
   }
 
   async function mint(e) {
@@ -85,7 +102,6 @@ export default function Home() {
 
     const value = count * price
     const mint = await nft.connect(signer).mint(count, [], {value: value.toString()})
-    console.log(mint)
     setTx(mint.hash)
     setModalMessage('Transaction Sent')
     setDisplay('block')
@@ -95,8 +111,12 @@ export default function Home() {
     e.preventDefault()
 
     if(message == 'Connect Wallet') {
-      await init(e)
-      return
+      try{
+        await init(e)
+        return
+      } catch {
+        await init(e)
+      }
     } 
     if(message == 'Connected') {
       try{
