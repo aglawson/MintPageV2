@@ -314,12 +314,12 @@
 .modalMain {
   position:fixed;
   background: white;
-  width: 15%;
-  height: 15%;
+  width: 40%;
+  height: 20%;
   top:50%;
   left:50%;
   transform: translate(-50%,-50%);
-  border-radius: 5%;
+  border-radius: 6%;
 }
 
 .display-block {

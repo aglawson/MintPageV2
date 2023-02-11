@@ -213,7 +213,7 @@ export default function Home() {
           <div onClick={() => setDisplay('none')} className={styles.modal} style={{display: display}}></div>
           <div className={styles.modalMain} style={{display: display}}>
                <p className={styles.code} style={{textAlign: 'center', paddingTop: '5%'}}>{modalMessage}</p>
-               <p className={styles.code} style={{textAlign: 'center', marginTop: '15%'}}><a href={modalMessage == 'Transaction Sent' ? `${config.etherscan}tx/${tx}` : ''} target={modalMessage == 'Transaction Sent' ? '_blank' : '_self'} rel="noreferrer" className={modalMessage == 'Transaction Sent' ? styles.card : styles.code} style={{}}>{modalMessage == 'Transaction Sent' ? 'View on Etherscan' : 'Please try again'}</a></p>
+               <p className={styles.code} style={{textAlign: 'center', marginTop: '10%',}}><a href={modalMessage == 'Transaction Sent' ? `${config.etherscan}tx/${tx}` : ''} target={modalMessage == 'Transaction Sent' ? '_blank' : '_self'} rel="noreferrer" className={modalMessage == 'Transaction Sent' ? styles.card : styles.code} style={{}}>{modalMessage == 'Transaction Sent' ? 'View on Etherscan' : 'Please try again'}</a></p>
           </div>
         </div>
       </main>
